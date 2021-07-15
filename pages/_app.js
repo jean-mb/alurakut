@@ -1,5 +1,5 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import { AlurakutStyles } from '../src/lib/AlurakutCommons' 
+import { AlurakutStyles } from '../src/lib/AlurakutCommons'
 
 const GlobalStyle = createGlobalStyle`
   /* RESET */ 
@@ -11,10 +11,11 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: sans-serif;
-    background-image: url('https://i.ibb.co/PMx9zqy/background.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    }
+    background-image: url("https://i.ibb.co/tqtrZvY/background.jpg");
+    background-position: center;
+    background-size: 100%;
+
+  }
 
   #__next {    
     display: flex;
