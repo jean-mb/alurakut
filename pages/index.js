@@ -55,34 +55,54 @@ function ProfileRelationsBox(propriedades) {
 }
 const user = 'jean-mb'
 export default function Home() {
-  const [communities, setCommunity] = React.useState([
-    {
-      id: '12802378123789378912789789123896123',
-      title: 'Eu odeio acordar cedo',
-      image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
-    }
-  ])
+  const [communities, setCommunity] = React.useState([])
 
   const favUsers = [
+    'luma-sz',
     'juunegreiros',
     'omariosouto',
     'peas',
     'rafaballerini',
-    'marcobrunodev',
-    'felipefialho'
+    'marcobrunodev'
   ]
 
-  const [seguidores, setSeguidores] = React.useState([])
+  const [followers, setFollowers] = React.useState([])
   React.useEffect(function () {
     fetch(`https://api.github.com/users/${user}/followers`)
-      .then(function (respostaDoServidor) {
-        return respostaDoServidor.json();
+      .then(function (serverResponse) {
+        return serverResponse.json()
       })
-      .then(function (respostaCompleta) {
-        setSeguidores(respostaCompleta)
+      .then(function (response) {
+        setFollowers(response)
+      })
+
+    // API GraphQL
+    fetch('https://graphql.datocms.com/', {
+      method: 'POST',
+      headers: {
+        'Authorization': '4d3c05f3e864b8999fa2e482ce3323',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `query {
+          allCommunities {
+            title
+            id
+            imageUrl
+          }
+        }`
+      })
+    })
+      .then(response => response.json())
+      .then(responseAll => {
+        const communitiesFromDato = responseAll.data.allCommunities
+        console.log(communitiesFromDato)
+        setCommunity(communitiesFromDato)
       })
   }, [])
 
+  
   return (
     <>
       <AlurakutMenu />
@@ -105,19 +125,29 @@ export default function Home() {
                 const formData = new FormData(e.target)
 
                 const community = {
-                  id: new Date().toISOString(),
                   title: formData.get('title'),
-                  image: formData.get('image')
+                  imageUrl: formData.get('image')
                 }
-                const updatedCommunities = [...communities, community]
-                setCommunity(updatedCommunities)
+
+                fetch('/api/communities', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(community)
+                }).then(async (response) => {
+                  const data = await response.json();
+                  const community = data.registerCreated;
+                  const updatedCommunities = [...communities, community];
+                  setCommunity(updatedCommunities);
+                })
               }}
             >
               <div>
                 <input
-                  placeholder="Qual vai ser o nome da sua community?"
+                  placeholder="Qual vai ser o nome da sua comunidade?"
                   name="title"
-                  aria-label="Qual vai ser o nome da sua community?"
+                  aria-label="Qual vai ser o nome da sua comunidade?"
                   type="text"
                 />
               </div>
@@ -137,8 +167,7 @@ export default function Home() {
           className="profileRelationsArea"
           style={{ gridArea: 'profileRelationsArea' }}
         >
-          <ProfileRelationsBox title="Seguidores" items={seguidores} />
-
+          <ProfileRelationsBox title="Seguidores" items={followers} />
 
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">Comunidade ({communities.length})</h2>
@@ -146,8 +175,8 @@ export default function Home() {
               {communities.map(currentItem => {
                 return (
                   <li key={currentItem.id}>
-                    <a href={`/users/${currentItem.title}`}>
-                      <img src={currentItem.image} />
+                    <a href={`/communities/${currentItem.id}`}>
+                      <img src={currentItem.imageUrl} />
                       <span>{currentItem.title}</span>
                     </a>
                   </li>
