@@ -5,7 +5,6 @@ import NextLink from 'next/link'
 const BASE_URL = 'http://alurakut.vercel.app/'
 const v = '1'
 
-const user = 'jean-mb'
 function Link({ href, children, ...props }) {
   return (
     <NextLink href={href} passHref>
@@ -14,7 +13,11 @@ function Link({ href, children, ...props }) {
   )
 }
 
+// ================================================================================================================
+// Menu
+// ================================================================================================================
 export function AlurakutMenu({ githubUser }) {
+  
   const [isMenuOpen, setMenuState] = React.useState(false)
   return (
     <AlurakutMenu.Wrapper isMenuOpen={isMenuOpen}>
@@ -37,7 +40,7 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>Sair</a>
+          <a href={`/login`}>Sair</a>
           <div>
             <input placeholder="Pesquisar no Orkut" />
           </div>
@@ -50,7 +53,7 @@ export function AlurakutMenu({ githubUser }) {
           )}
         </button>
       </div>
-      <AlurakutMenuProfileSidebar githubUser={user} />
+      <AlurakutMenuProfileSidebar githubUser={ githubUser } />
     </AlurakutMenu.Wrapper>
   )
 }
@@ -175,7 +178,7 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
         />
         <hr />
         <p>
-          <a className="boxLink" href={`/user/${githubUser}`}>
+          <a className="boxLink" href={`${githubUser}`}>
             @{githubUser}
           </a>
         </p>
@@ -191,6 +194,7 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
 // AlurakutProfileSidebarMenuDefault
 // ================================================================================================================
 export function AlurakutProfileSidebarMenuDefault() {
+  
   return (
     <AlurakutProfileSidebarMenuDefault.Wrapper>
       <nav>
