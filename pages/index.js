@@ -49,7 +49,7 @@ export default function Home(props) {
   const [comunidades, setComunidades] = React.useState([])
 
   const pessoasFavoritas = [
-    'juunegreiros',
+    'luma-sz',
     'omariosouto',
     'peas',
     'rafaballerini',
